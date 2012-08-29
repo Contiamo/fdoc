@@ -45,8 +45,9 @@ module Fdoc
           rescue
             {}
           end
+          path_params = request.path_parameters.reject { |param| [:action, :controller].include? param }
           successful = Fdoc.decide_success(response_params, real_response.status)
-          Service.verify!(verb, path, request_params, response_params,
+          Service.verify!(verb, path, request_params, response_params, path_params,
             real_response.status, successful)
         end
 
