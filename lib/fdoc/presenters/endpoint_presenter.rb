@@ -17,16 +17,25 @@ class Fdoc::EndpointPresenter < Fdoc::HtmlPresenter
       description: endpoint.description,
       endpoint: endpoint.display_path,
       method: endpoint.verb,
-      request_parameters: request_parameters_presenter.to_json,
-      response_parameters: response_parameters_presenter.to_json,
-      path_parameters: path_parameters_presenter.to_json,
-      example_request: example_from_schema(endpoint.request_parameters),
-      example_response: example_from_schema(endpoint.response_parameters),
       response_codes: {
         success: successful_response_codes.map(&:to_json),
         failure: failure_response_codes.map(&:to_json)
       }
-    }
+    }.tap do |obj|
+      unless endpoint.request_parameters.empty?
+        obj[:request_parameters] = request_parameters_presenter.to_json
+        obj[:example_request] = example_from_schema(endpoint.request_parameters)
+      end
+
+      unless endpoint.response_parameters.empty?
+        obj[:response_parameters] = response_parameters_presenter.to_json
+        obj[:example_response] = example_from_schema(endpoint.response_parameters)
+      end
+
+      unless endpoint.path_parameters.empty?
+        obj[:path_parameters] = path_parameters_presenter.to_json
+      end
+    end
   end
 
   def name

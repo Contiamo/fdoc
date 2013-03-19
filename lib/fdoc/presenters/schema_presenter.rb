@@ -60,7 +60,7 @@ class Fdoc::SchemaPresenter < Fdoc::HtmlPresenter
   end
 
   def to_json
-    @schema["properties"]
+    @schema
   end
 
   def type
