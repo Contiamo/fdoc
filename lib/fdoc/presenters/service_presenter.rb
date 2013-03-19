@@ -8,7 +8,12 @@ class Fdoc::ServicePresenter < Fdoc::HtmlPresenter
   end
 
   def to_html
-    render_erb('service.html.erb')
+    unless ENV['GENJS']
+      render_erb('service.html.erb')
+    else
+      render_erb('service.js.erb')
+    end
+
   end
 
   def name_as_link(options = {})

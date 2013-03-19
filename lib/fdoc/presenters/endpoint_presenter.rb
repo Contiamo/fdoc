@@ -8,7 +8,11 @@ class Fdoc::EndpointPresenter < Fdoc::HtmlPresenter
   end
 
   def to_html
-    render_erb('endpoint.html.erb')
+    unless ENV['GENJS']
+      render_erb('endpoint.html.erb')
+    else
+      render_erb('endpoint.js.erb')
+    end
   end
 
   def name

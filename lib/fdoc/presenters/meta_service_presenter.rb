@@ -8,7 +8,11 @@ class Fdoc::MetaServicePresenter < Fdoc::HtmlPresenter
   end
 
   def to_html
-    render_erb('meta_service.html.erb')
+    unless ENV['GENJS']
+      render_erb('meta_service.html.erb')
+    else
+      render_erb('meta_service.js.erb')
+    end
   end
 
   def services
