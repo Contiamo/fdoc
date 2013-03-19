@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+require 'json'
+require File.join(File.dirname(__FILE__), '../lib/fdoc')
+
+if ARGV.length < 2
+  exec_name = File.basename($0)
+  abort "Usage: #{exec_name} [fdoc_directory] [json_directory] (url_base_path)"
+end
+
+fdoc_directory, json_directory, url_base_path = ARGV[0..2]
+fdoc_directory = File.expand_path(fdoc_directory)
+json_directory = File.expand_path(json_directory)
+
+json_options = {
+  :json_directory => json_directory,
+  :url_base_path => url_base_path
+}
+
+endpoints = {}
+
+services = Array(Fdoc::Service.new(fdoc_directory))
+services.each do |service|
+  service_presenter = Fdoc::ServicePresenter.new(service, json_options)
+  service_presenter.endpoints.flatten.each do |endpoint|
+    endpoints[endpoint.endpoint.key] = endpoint.to_json
+  end
+end
+
+def mkdir(dirname)
+  `mkdir -p #{dirname}` unless File.directory?(dirname)
+end
+
+mkdir(json_directory)
+json_output_path = File.join(json_directory, "fdoc.json")
+File.open(json_output_path, "w") do |file|
+  file.write JSON.pretty_generate(endpoints)
+end

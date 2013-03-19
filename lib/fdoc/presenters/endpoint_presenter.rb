@@ -11,6 +11,24 @@ class Fdoc::EndpointPresenter < Fdoc::HtmlPresenter
     render_erb('endpoint.html.erb')
   end
 
+  def to_json
+    {
+      title: endpoint.title,
+      description: endpoint.description,
+      endpoint: endpoint.display_path,
+      method: endpoint.verb,
+      request_parameters: request_parameters_presenter.to_json,
+      response_parameters: response_parameters_presenter.to_json,
+      path_parameters: path_parameters_presenter.to_json,
+      example_request: example_from_schema(endpoint.request_parameters),
+      example_response: example_from_schema(endpoint.response_parameters),
+      response_codes: {
+        success: successful_response_codes.map(&:to_json),
+        failure: failure_response_codes.map(&:to_json)
+      }
+    }
+  end
+
   def name
     <<-EOS
     <span class="endpoint-name #{@endpoint.deprecated? ? 'deprecated' : nil}">
@@ -67,18 +85,28 @@ class Fdoc::EndpointPresenter < Fdoc::HtmlPresenter
     endpoint.display_path
   end
 
+  def path_parameters_presenter
+    Fdoc::SchemaPresenter.new(endpoint.path_parameters(true), options)
+  end
+
+  def request_parameters_presenter
+    Fdoc::SchemaPresenter.new(endpoint.request_parameters, options.merge(:request => true))
+  end
+
+  def response_parameters_presenter
+    Fdoc::SchemaPresenter.new(endpoint.response_parameters, options)
+  end
+
   def path_parameters
-    Fdoc::SchemaPresenter.new(endpoint.path_parameters(true), options).to_html
+    path_parameters_presenter.to_html
   end
 
   def request_parameters
-    Fdoc::SchemaPresenter.new(endpoint.request_parameters,
-      options.merge(:request => true)
-    ).to_html
+    request_paramters_presenter.to_html
   end
 
   def response_parameters
-    Fdoc::SchemaPresenter.new(endpoint.response_parameters, options).to_html
+    response_paramters_presenter.to_html
   end
 
   def response_codes

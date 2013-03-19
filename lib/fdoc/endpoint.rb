@@ -45,6 +45,10 @@ class Fdoc::Endpoint
     end
   end
 
+  def key
+    "#{verb.downcase}_#{file_path.gsub('/', '_')}"
+  end
+
   def verb
     @verb ||= endpoint_path.match(/([A-Z]*)\.fdoc$/)[1]
   end
@@ -107,6 +111,10 @@ class Fdoc::Endpoint
 
   def description
     @schema["description"]
+  end
+
+  def title
+    @schema["title"]
   end
 
   def path_parameters(for_display=false)

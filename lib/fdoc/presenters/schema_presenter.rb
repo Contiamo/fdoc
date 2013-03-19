@@ -2,6 +2,7 @@
 # schema things, has a tendency to recurse.
 class Fdoc::SchemaPresenter < Fdoc::HtmlPresenter
   FORMATTED_KEYS = %w(
+    title
     description
     type
     required
@@ -56,6 +57,10 @@ class Fdoc::SchemaPresenter < Fdoc::HtmlPresenter
     html << '</div>'
 
     html.string
+  end
+
+  def to_json
+    @schema["properties"]
   end
 
   def type

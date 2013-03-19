@@ -18,6 +18,10 @@ class Fdoc::ResponseCodePresenter < Fdoc::HtmlPresenter
     EOS
   end
 
+  def to_json
+    status
+  end
+
   def successful?
     response_code["successful"]
   end
