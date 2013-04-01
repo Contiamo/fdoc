@@ -32,7 +32,7 @@ def mkdir(dirname)
 end
 
 mkdir(json_directory)
-json_output_path = File.join(json_directory, "fdoc.json")
+json_output_path = File.join(json_directory, "fdoc_#{Time.now.to_i}.json")
 File.open(json_output_path, "w") do |file|
   file.write JSON.pretty_generate(endpoints)
 end
