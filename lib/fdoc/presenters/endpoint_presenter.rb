@@ -181,7 +181,7 @@ class Fdoc::EndpointPresenter < Fdoc::HtmlPresenter
     example = {}
     if object["properties"]
       object["properties"].each do |key, value|
-        example[key] = example_from_schema(value)
+        example[key] = example_from_schema(value) unless value['ignore_example']
       end
     end
     example
