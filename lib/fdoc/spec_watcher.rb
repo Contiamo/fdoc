@@ -22,7 +22,9 @@ module Fdoc
         # check if fdoc has been temporarily disabled
         return result if example.options[:disable_fdoc]
 
-        path = if respond_to?(:example) # Rspec 2
+        path = if RSpec.respond_to?(:current_example) # Rspec 3
+          RSpec.current_example.metadata[:fdoc]
+        elsif respond_to?(:example) # Rspec 2
           example.metadata[:fdoc]
         else # Rspec 1.3.2
           opts = {}
