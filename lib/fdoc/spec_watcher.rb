@@ -19,8 +19,6 @@ module Fdoc
         end
 
         result = super(*params)
-        # check if fdoc has been temporarily disabled
-        return result if example.options[:disable_fdoc]
 
         path = if RSpec.respond_to?(:current_example) # Rspec 3
           RSpec.current_example.metadata[:fdoc]
